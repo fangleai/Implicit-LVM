@@ -11,6 +11,7 @@ python vae_onehot.py
 python train_onehot.py
 ```
 The result is as following:
+
 VAE             |  Implicit-VAE
 :--------------:|:-------------------------:
 ![](toy_onehot/results_vae/070000.png)  |  ![](toy_onehot/results/075000.png)
