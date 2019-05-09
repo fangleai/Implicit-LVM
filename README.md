@@ -16,5 +16,31 @@ VAE             |  Implicit-VAE
 :--------------:|:-------------------------:
 ![](toy_onehot/results_vae/070000.png)  |  ![](toy_onehot/results/075000.png)
 
+# 2. Language modeling on Yahoo
+After downloading, run
+```
+cd lang_model_yahoo/
+python preprocess_yahoo.py --trainfile data/train.txt --valfile data/val.txt --testfile data/test.txt --outputfile data/yahoo
+```
+This will create the `*.hdf5` files (data tensors) to be used by the model, as well as the `*.dict` file which contains the word-to-integer mapping for each word.
+
+Specify '--model' in cmd line, with '--model mle' for implicit vae (default if not specified) and '--model mle_mi' for implicit vae with mutual information maximized. The command for training is for example
+```
+python train_yahoo.py
+```
+The command for evaluation after the 30th epoch is
+```
+python train_yahoo.py --test --train_from results_mle/030.pt
+```
+# 3. Language modeling on Yelp
+Specify '--model' in cmd line, with '--model mle' for implicit vae (default if not specified) and '--model mle_mi' for implicit vae with mutual information maximized. The command for training is for example
+```
+python train_yelp.py
+```
+The command for evaluation after, e.g., the 30th epoch is
+```
+python train_yelp.py --test --train_from results_mle/030.pt
+```
+
 # Reference
   NA so far.
