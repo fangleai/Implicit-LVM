@@ -16,7 +16,35 @@ VAE             |  Implicit-VAE
 :--------------:|:-------------------------:
 ![](toy_onehot/results_vae/070000.png)  |  ![](toy_onehot/results/075000.png)
 
-# 2. Language modeling on Yahoo
+# 2. Language modeling on PTB
+After downloading, run
+```
+cd lang_model_ptb/
+python preprocess_ptb.py --trainfile data/train.txt --valfile data/val.txt --testfile data/test.txt --outputfile data/ptb
+```
+This will create the `*.hdf5` files (data tensors) to be used by the model, as well as the `*.dict` file which contains the word-to-integer mapping for each word.
+
+Specify '--model' in cmd line, with '--model mle' for implicit vae (default if not specified) and '--model mle_mi' for implicit vae with mutual information maximized. The command for training is for example
+```
+python train_ptb.py
+```
+The command for evaluation after the 30th epoch is
+```
+python train_ptb.py --test --train_from results_mle/030.pt
+```
+The command for training VAEs ('vae', 'beta_vae', 'savae', 'cyc_vae') is for example
+```
+python train_ptb_vaes.py --model vae
+```
+For interpolating between 2 sentences after training the 40th epoch, run
+```
+python interpolation.py
+```
+For evaluating decoders from prior codes after training and calculate forward & reverse PPL, we need install [KenLM Language Model Toolkit](https://github.com/kpu/kenlm) and run
+```
+python generative_model.py --model ['mle', 'mle_mi', 'vae','beta_vae', 'savae', 'cyc_vae']
+```
+# 3. Language modeling on Yahoo
 After downloading, run
 ```
 cd lang_model_yahoo/
@@ -32,7 +60,7 @@ The command for evaluation after the 30th epoch is
 ```
 python train_yahoo.py --test --train_from results_mle/030.pt
 ```
-# 3. Language modeling on Yelp
+# 4. Language modeling on Yelp
 Specify '--model' in cmd line, with '--model mle' for implicit vae (default if not specified) and '--model mle_mi' for implicit vae with mutual information maximized. The command for training is for example
 ```
 python train_yelp.py
