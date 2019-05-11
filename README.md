@@ -69,6 +69,14 @@ The command for evaluation after, e.g., the 30th epoch is
 ```
 python train_yelp.py --test --train_from results_mle/030.pt
 ```
+The command for training an autoencoder (AE) is
+```
+python train_yelp_ae.py
+```
+The command for training VAEs ('vae', 'beta_vae', 'cyc_vae') is for example
+```
+python train_yelp_vaes.py --model vae
+```
 
 # Reference
   NA so far.
