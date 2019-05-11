@@ -330,7 +330,7 @@ for epo in torch.arange(epo_0 + 1, args.num_epochs + 1):
                 beta = min(1.0, beta + 1. / (args.warmup * len(train_data)))
         if args.model == 'beta_vae':
             if args.warmup > 0:
-                beta = min(0.5, beta + 1. / (args.warmup * len(train_data)))
+                beta = min(args.beta, beta + 1. / (args.warmup * len(train_data)))
         meta_optimizer.beta = beta
 
         optimizer.zero_grad()

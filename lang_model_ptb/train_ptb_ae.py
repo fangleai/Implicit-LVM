@@ -1,7 +1,7 @@
 
 import sys
 import os
-from models_ptb import Decoder, Encoder, Nu_xz, Nu_z
+from models_ptb import Decoder, Encoder_AE
 from preprocess_ptb import Indexer
 import torch
 from torch import optim
@@ -25,15 +25,10 @@ parser.add_argument('--train_from', default='')
 parser.add_argument('--seed', default=0, type=int)
 parser.add_argument('--test', action="store_true")
 parser.add_argument('--log_prefix', default='eval')
-parser.add_argument('--model', default='mle', type=str, choices=['mle', 'mle_mi'])
-
-# KL cost annealing, increase beta from beta_0 by 1/warmup in certain steps
-parser.add_argument('--warmup', default=10, type=int)
-parser.add_argument('--beta_0', default=0.1, type=float)
+parser.add_argument('--model', default='ae', type=str)
 
 # global training parameters
 parser.add_argument('--num_epochs', default=40, type=int)
-parser.add_argument('--num_particles_eval', default=128, type=int)
 
 # use GPU
 parser.add_argument('--gpu', default=0, type=int)
@@ -50,8 +45,6 @@ parser.add_argument('--dec_h_dim', default=256, type=int)
 parser.add_argument('--dec_num_layers', default=1, type=int)
 parser.add_argument('--dec_dropout', default=0.5, type=float)
 
-parser.add_argument('--num_nu_updates', default=5, type=int)
-parser.add_argument('--nu_lr', default=1e-5, type=float)
 parser.add_argument('--end2end_lr', default=1e-3, type=float)
 parser.add_argument('--max_grad_norm', default=5.0, type=float)
 
@@ -95,10 +88,9 @@ prng = np.random.RandomState()
 torch.manual_seed(args.seed)
 if gpu: torch.cuda.manual_seed(args.seed)
 
-beta = 1.0 if args.warmup == 0 else args.beta_0
 epo_0 = 0
 
-encoder = Encoder(vocab_size=vocab_size,
+encoder = Encoder_AE(vocab_size=vocab_size,
                   enc_word_dim=args.enc_word_dim,
                   enc_h_dim=args.enc_h_dim,
                   enc_num_layers=args.enc_num_layers,
@@ -109,11 +101,7 @@ decoder = Decoder(vocab_size=vocab_size,
                   dec_num_layers=args.dec_num_layers,
                   dec_dropout=args.dec_dropout,
                   latent_dim=args.latent_dim)
-nu_xz = Nu_xz(enc_h_dim=args.enc_h_dim, latent_dim=args.latent_dim)
-nu_z = Nu_z(latent_dim=args.latent_dim)
 criterion = nn.NLLLoss()
-nu_xz_optimizer = optim.Adam(nu_xz.parameters(), lr=args.nu_lr)
-nu_z_optimizer = optim.Adam(nu_z.parameters(), lr=args.nu_lr)
 end2end_optimizer = optim.Adam(chain(encoder.parameters(), decoder.parameters()), lr=args.end2end_lr)
 
 if args.train_from == "":
@@ -124,8 +112,6 @@ if args.train_from == "":
     if gpu:
         encoder = encoder.cuda()
         decoder = decoder.cuda()
-        nu_xz = nu_xz.cuda()
-        nu_z = nu_z.cuda()
         criterion.cuda()
 else:
     logging.info('load model from' + args.train_from)
@@ -141,21 +127,14 @@ else:
 
     encoder = checkpoint['encoder']
     decoder = checkpoint['decoder']
-    nu_xz = checkpoint['nu_xz']
-    nu_z = checkpoint['nu_z']
     criterion = checkpoint['criterion']
-    nu_xz_optimizer = checkpoint['nu_xz_optimizer']
-    nu_z_optimizer = checkpoint['nu_z_optimizer']
     end2end_optimizer = checkpoint['end2end_optimizer']
 
-    beta = checkpoint['beta']
     epo_0 = int(args.train_from[-6:-3])
 
 logging.info("model configuration:")
 logging.info(str(encoder))
 logging.info(str(decoder))
-logging.info(str(nu_xz))
-logging.info(str(nu_z))
 
 
 def evaluation(data):
@@ -166,8 +145,6 @@ def evaluation(data):
     num_sents = 0.0
     num_words = 0.0
     total_rec = 0.0
-    total_kl_xz = 0.0
-    total_kl_z = 0.0
     total_mean_au = torch.zeros(args.latent_dim, device='cuda' if gpu else 'cpu')
     total_sq_au = torch.zeros(args.latent_dim, device='cuda' if gpu else 'cpu')
 
@@ -175,51 +152,33 @@ def evaluation(data):
     for mini_batch in pbar:
         # logging.info('batch: %d' % mini_batch)
 
-        sents_batch, length, batch_size = data[mini_batch]
+        sents, length, batch_size = data[mini_batch]
         batch_size = batch_size.item()
         length = length.item()
         num_sents += batch_size
         num_words += batch_size * length
-        if gpu: sents_batch = sents_batch.cuda()
+        if gpu: sents = sents.cuda()
 
-        for bat in range(batch_size):
-            idx = [bat] * args.num_particles_eval
-            sents = sents_batch[idx, :]
-            eps = torch.randn((args.num_particles_eval, args.latent_dim), device=sents_batch.device)
-            z_x, enc = encoder(sents, eps)
-            z_x = z_x.data
+        z_x = encoder(sents)
+        z_x = z_x.data
 
-            # rec, kl
-            preds = decoder(sents, z_x).data
-            rec = sum([criterion(preds[:, l], sents[:, l + 1]) for l in range(preds.size(1))])
-            total_rec += rec.item()
-            z = torch.randn_like(eps)
-            kl_xz = torch.mean(nu_xz(z_x, enc).data - torch.exp(nu_xz(z, enc)).data) + 1.0
-            total_kl_xz += kl_xz.item()
-            kl_z = torch.mean(nu_z(z_x).data - torch.exp(nu_z(z)).data) + 1.0
-            total_kl_z += kl_z.item()
+        # rec, kl
+        preds = decoder(sents, z_x).data
+        rec = sum([criterion(preds[:, l], sents[:, l + 1]) for l in range(preds.size(1))])
+        total_rec += rec.item() * batch_size
 
-            # active units
-            mean = torch.mean(z_x, dim=0)
-            total_mean_au += mean
-            total_sq_au += mean ** 2
+        # active units
+        total_mean_au += torch.sum(z_x, dim=0)
+        total_sq_au += torch.sum(z_x ** 2, dim=0)
 
-            del eps, z_x, z
-            torch.cuda.empty_cache()
+        del z_x
+        torch.cuda.empty_cache()
 
     rec = total_rec / num_sents
-    kl_xz = total_kl_xz / num_sents
-    nelbo = rec + kl_xz
-    ppl = math.exp((total_rec + total_kl_xz) / num_words)
-    kl_z = total_kl_z / num_sents
-    mi = kl_xz - kl_z
+    ppl = math.exp(total_rec / num_words)
 
     logging.info('rec: %.4f' % rec)
-    logging.info('kl with nu: %.4f' % kl_xz)
-    logging.info('neg_ELBO with nu: %.4f' % nelbo)
     logging.info('ppl: %.4f' % ppl)
-    logging.info('kl_z: %.4f' % kl_z)
-    logging.info('mi: %.4f' % mi)
 
     mean_au = total_mean_au / num_sents
     sq_au = total_sq_au / num_sents
@@ -228,13 +187,13 @@ def evaluation(data):
     logging.info('au_cov: %s' % str(au_cov))
     logging.info('au: %.4f' % au)
 
-    report = "rec %f, kl_xz %f, elbo %f, \nppl %f, kl_z %f, mi %f, au %f\n" % (rec, kl_xz, nelbo, ppl, kl_z, mi, au)
+    report = "rec %f, ppl %f, au %f\n" % (rec, ppl, au)
     print(report)
 
     encoder.train()
     decoder.train()
 
-    return nelbo
+    return rec
 
 
 def sample_sentences(decoder, vocab, num_sentences, reconstruction=False, data=test_data):
@@ -313,13 +272,8 @@ def check_point(epo=None):
         'args': args,
         'encoder': encoder,
         'decoder': decoder,
-        'nu_xz': nu_xz,
-        'nu_z': nu_z,
         'criterion': criterion,
-        'nu_xz_optimizer': nu_xz_optimizer,
-        'nu_z_optimizer': nu_z_optimizer,
         'end2end_optimizer': end2end_optimizer,
-        'beta': beta,
 
         'np_random_state': prng.get_state(),
         'torch_rng_state': torch.get_rng_state(),
@@ -369,34 +323,12 @@ for epo in torch.arange(epo_0 + 1, args.num_epochs + 1):
         batch_size = batch_size.item()
         length = length.item()
         if gpu: sents = sents.cuda()
-        eps = torch.randn((batch_size, args.latent_dim), device=sents.device)
-        z_x, enc = encoder(sents, eps)
-        beta = min(1, beta + 1. / (args.warmup * len(train_data)))
-
-        # nu update
-        for k in torch.arange(args.num_nu_updates):
-            z_x_nu = z_x.data
-            z = torch.randn_like(z_x_nu)
-            nu_xz_loss = torch.mean(torch.exp(nu_xz(z, enc)) - nu_xz(z_x_nu, enc))
-            nu_xz_optimizer.zero_grad()
-            nu_xz_loss.backward()
-            nu_xz_optimizer.step()
-            del nu_xz_loss
-
-            nu_z_loss = torch.mean(torch.exp(nu_z(z)) - nu_z(z_x_nu))
-            nu_z_optimizer.zero_grad()
-            nu_z_loss.backward()
-            nu_z_optimizer.step()
-            del nu_z_loss
+        z_x = encoder(sents)
 
         # end2end update
         preds = decoder(sents, z_x)
         rec = sum([criterion(preds[:, l], sents[:, l + 1]) for l in range(preds.size(1))])
-        if args.model == 'mle':
-            loss = rec + beta * torch.mean(nu_xz(z_x, enc))
-        else:
-            loss = rec + beta * torch.mean(nu_z(z_x))
-
+        loss = rec
         end2end_optimizer.zero_grad()
         loss.backward()
         if args.max_grad_norm > 0:

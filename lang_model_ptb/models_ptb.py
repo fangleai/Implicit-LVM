@@ -34,6 +34,35 @@ class Encoder(nn.Module):
         return z, enc_h_states_last.data
 
 
+class Encoder_AE(nn.Module):
+
+    def __init__(self, vocab_size=10002,
+                 enc_word_dim=256,
+                 enc_h_dim=256,
+                 enc_num_layers=1,
+                 latent_dim=32):
+        super(Encoder_AE, self).__init__()
+
+        self.enc_h_dim = enc_h_dim
+        self.enc_num_layers = enc_num_layers
+        self.enc_word_dim = enc_word_dim
+
+        self.enc_word_vecs = nn.Embedding(vocab_size, self.enc_word_dim)
+        self.latent_linear = nn.Linear(enc_h_dim, latent_dim)
+        self.enc_rnn = nn.LSTM(enc_word_dim, enc_h_dim, num_layers=enc_num_layers, batch_first=True)
+
+    def forward(self, sents):
+        word_vecs = self.enc_word_vecs(sents)
+        h0 = torch.zeros((self.enc_num_layers, word_vecs.size(0), self.enc_h_dim), device=sents.device)
+        c0 = torch.zeros((self.enc_num_layers, word_vecs.size(0), self.enc_h_dim), device=sents.device)
+
+        enc_h_states, _ = self.enc_rnn(word_vecs, (h0, c0))
+        enc_h_states_last = enc_h_states[:, -1]
+
+        z = self.latent_linear(enc_h_states_last)
+        return z
+
+
 class Nu_xz(nn.Module):
 
     def __init__(self, enc_h_dim=256, latent_dim=32):

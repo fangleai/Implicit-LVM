@@ -20,7 +20,7 @@ parser.add_argument('--train_from_epo', default=40, type=int)
 parser.add_argument('--seed', default=0, type=int)
 parser.add_argument('--log_prefix', default='generative_model')
 parser.add_argument('--generate_text', default='generated.txt')
-parser.add_argument('--model', default='mle', type=str, choices=['mle', 'mle_mi', 'vae','beta_vae', 'savae', 'cyc_vae'])
+parser.add_argument('--model', default='ae', type=str, choices=['mle','mle_mi','ae','vae','beta_vae','savae','cyc_vae'])
 parser.add_argument('--num_particles_eval', default=128, type=int)
 parser.add_argument('--latent_dim', default=32, type=int)
 
@@ -56,7 +56,7 @@ train_from = results_folder + '%03d.pt' % args.train_from_epo
 logging.info('load model from' + train_from)
 checkpoint = torch.load(train_from, map_location="cuda:" + str(args.gpu) if gpu else 'cpu')
 
-if args.model == 'mle' or args.model == 'mle_mi':
+if args.model == 'mle' or args.model == 'mle_mi' or args.model == 'ae':
     decoder = checkpoint['decoder']
 else:
     decoder = checkpoint['model']
