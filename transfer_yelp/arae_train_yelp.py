@@ -449,9 +449,9 @@ def save_model(epoch):
         torch.save(classifier.state_dict(), f)
 
 
-args.load_path = './output/ARAE'
-args.load_epoch = 25
-args.eval = True
+# args.load_path = './output/ARAE'
+# args.load_epoch = 25
+# args.eval = True
 if args.load_path != '':
     autoencoder, gan_gen, gan_disc, classifier = load_models(args.load_path, args.load_epoch, twodecoders=True)
     if use_cuda:
