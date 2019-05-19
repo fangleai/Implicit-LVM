@@ -48,9 +48,9 @@ parser.add_argument('--reload_from', type=int, default=-1, help='reload from a t
 parser.add_argument('--gpu_id', type=int, default=0, help='GPU ID')
 parser.add_argument('--no_gpu', action="store_true")
 
-# KL cost annealing, increase beta from beta_0 by 1/warmup in certain steps
-parser.add_argument('--warmup', default=10, type=int)
-parser.add_argument('--beta_0', default=0.1, type=float)
+# # KL cost annealing, increase beta from beta_0 by 1/warmup in certain steps
+# parser.add_argument('--warmup', default=10, type=int)
+# parser.add_argument('--beta_0', default=0.1, type=float)
 
 # Evaluation Arguments
 parser.add_argument('--eval', action='store_true', help='evaluation')
@@ -224,7 +224,7 @@ if args.eval:
 logging.info('------------------------------------------------------')
 logging.info("Training...")
 start_epoch = 0 if args.reload_from == -1 else args.reload_from
-beta = args.beta_0
+# beta = args.beta_0
 
 for epoch in range(start_epoch + 1, config['epochs'] + 1):
     logging.info("the current epo is %d" % epoch)
@@ -240,8 +240,8 @@ for epoch in range(start_epoch + 1, config['epochs'] + 1):
         batch = train_loader.next_batch()
         if bat == train_loader.num_batch: break  # end of epoch
 
-        if args.warmup > 0:
-            beta = min(1.0, beta + 1. / (args.warmup * train_loader.num_batch))
+        # if args.warmup > 0:
+        #     beta = min(1.0, beta + 1. / (args.warmup * train_loader.num_batch))
 
         context, context_lens, utt_lens, floors, _, _, _, response, res_lens, _ = batch
         # remove the sos token in the context and reduce the context length
@@ -293,7 +293,8 @@ for epoch in range(start_epoch + 1, config['epochs'] + 1):
         c = c.data
         z_x = model.sample_code_post(x, c)
         z = model.sample_code_prior(c)
-        nu_loss = beta * torch.mean(model.nu_forward(z_x, c) - torch.exp(model.nu_forward(z, c)))
+        # nu_loss = beta * torch.mean(model.nu_forward(z_x, c) - torch.exp(model.nu_forward(z, c)))
+        nu_loss = torch.mean(model.nu_forward(z_x, c) - torch.exp(model.nu_forward(z, c)))
         nu_loss.backward()
         model.optimizer_end2end_fc.step()
 
