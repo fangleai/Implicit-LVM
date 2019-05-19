@@ -1,7 +1,7 @@
 # Implicit-LVM
 This code repository presents the pytorch implementation of the paper "Implicit Deep Latent Variable Models for Text Generation". 
 
-Each folder corresponds to a specific experiment with varied dataset or topic. To run the code, download the zip file, extract it and cd to `Implicit-LVM/`. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
+Each folder corresponds to a specific experiment with varied dataset or topic. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
 
 # 1. Toy_onehot
 The toy dataset contains 4 data points **x**: 4 different one-hot four-dimensional vectors, and we learn corresponding latent code **z** in 2D space for each **x**. Run the following in cmd lime:
@@ -78,6 +78,7 @@ The command for training VAEs ('vae', 'beta_vae', 'cyc_vae') is for example
 python train_yelp_vaes.py --model vae
 ```
 # 5. Style transfer on Yelp
+Need [fasttext library](https://pypi.org/project/fasttext/) and [KenLM Language Model Toolkit](https://github.com/kpu/kenlm) for evaluation. Please install beforehand.
 The command for training implicit vae with mutual information maximized is 
 ```
 python train_yelp.py
@@ -86,10 +87,31 @@ The command for training an [adversarially regularized autoencoder](https://arxi
 ```
 python arae_train_yelp.py
 ```
-The [KenLM Language Model Toolkit](https://github.com/kpu/kenlm) is also needed for evaluation. For evaluating the model after training for the 25th epoch, run
+For evaluating the model after training for the 25th epoch, run
 ```
 python train_yelp.py --eval --load_path ./output/ILVM --load_epoch 25
 ```
+# 5. Dialog response generation on Switchboard
+Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
 
+The command for training implicit vae with mutual information maximized is 
+```
+python train_swda.py
+```
+The command for training [DialogWAE](https://arxiv.org/abs/1805.12352) is
+```
+python DialogWAE_train_swda.py
+```
+# 6. Dialog response generation on Dailydial
+Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
+
+The command for training implicit vae with mutual information maximized is 
+```
+python train_dailydial.py
+```
+The command for training [DialogWAE](https://arxiv.org/abs/1805.12352) is
+```
+python DialogWAE_train_dailydial.py
+```
 # Reference
   NA so far.
