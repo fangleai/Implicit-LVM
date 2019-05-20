@@ -1,5 +1,5 @@
 # Implicit-LVM
-This code repository presents the pytorch implementation of the paper "Implicit Deep Latent Variable Models for Text Generation". 
+This code repository presents the pytorch implementation of the paper. 
 
 Each folder corresponds to a specific experiment with varied dataset or topic. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
 
