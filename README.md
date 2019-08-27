@@ -17,8 +17,6 @@ We present two types of implicit deep latent variable models, **iVAE** and **iVA
 Core to these two model variants is the sample-based representation of the latent features in LVMs, in replacement of traditional Gaussian-based distributions. In this repo, each folder corresponds to a specific experiment with different datasets or tasks. To run the code, please go to subfolders for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAEs. 
 
 ## Contents
-There are three steps to use this codebase to reproduce the results in the paper.
-
 1. [Proof-of-Concept on a Toy Dataset ](#Proof-of-Concept-on-a-Toy-Dataset )
 2. [Language modeling](#Language-modeling)
 
