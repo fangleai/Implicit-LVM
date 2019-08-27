@@ -11,8 +11,26 @@ This repository contains source code to reproduce the results presented in the p
 }
 ```
 
-
 Each folder corresponds to a specific experiment with different datasets or tasks. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
+
+## Contents
+There are three steps to use this codebase to reproduce the results in the paper.
+
+1. [Proof-of-Concept on a Toy Dataset ](#Proof-of-Concept-on-a-Toy-Dataset )
+2. [Language modeling](#Language-modeling)
+
+    2.1. [Language modeling on PTB](#Language-modeling-on-PTB)
+    
+    2.2. [Language modeling on Yahoo](#Language-modeling-on-Yahoo)
+    
+    2.3. [Language modeling on Yelp](#Language-modeling-on-Yelp) 
+
+3. [Style-transfer-on-Yelp](#Style transfer on Yelp) 
+4. [Dialog response generation](#Dialog-response-generation ) 
+
+    4.1. [Dialog response generation on Switchboard](#Dialog-response-generation-on-Switchboard)
+    
+    4.2. [Dialog response generation on DailyDialog](#Dialog-response-generation-on-Dailydial)
 
 # 1. Proof-of-Concept on a Toy Dataset 
 The toy dataset contains 4 data points **x**: 4 different one-hot four-dimensional vectors, and we learn the corresponding latent code **z** in 2D space for each **x**. Run the following in cmd lime:
@@ -120,7 +138,7 @@ The command for training [DialogWAE](https://arxiv.org/abs/1805.12352) is
 ```
 python DialogWAE_train_swda.py
 ```
-### 4.2. Dialog response generation on Dailydial
+### 4.2. Dialog response generation on DailyDialog
 
 Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
 
@@ -134,6 +152,6 @@ python DialogWAE_train_dailydial.py
 ```
 
 ## Questions?
-Please drop us ([Le](https://www.fangleai.com/) or [Chunyuan](http://chunyuan.li/) ) a line if you have any questions.
+Please drop us ([Le](https://www.fangleai.com/) or [Chunyuan](http://chunyuan.li/)) a line if you have any questions.
 
 
