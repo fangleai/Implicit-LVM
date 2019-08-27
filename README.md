@@ -1,7 +1,18 @@
 # Implicit-LVM
-This code repository presents the pytorch implementation of the paper. 
 
-Each folder corresponds to a specific experiment with varied dataset or topic. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
+This repository contains source code to reproduce the results presented in the paper [Implicit Deep Latent Variable Models for Text Generation](https://arxiv.org/abs/1901.00612) (EMNLP 2019):
+
+```
+@inproceedings{Fang_iLVM_2019_EMNLP,
+  title={Implicit Deep Latent Variable Models for Text Generation},
+  author={Le Fang, Chunyuan Li, Jianfeng Gao, Wei Dong, Changyou Chen},
+  booktitle={EMNLP},
+  year={2019}
+}
+```
+
+
+Each folder corresponds to a specific experiment with different datasets or tasks. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
 
 # 1. Toy_onehot
 The toy dataset contains 4 data points **x**: 4 different one-hot four-dimensional vectors, and we learn corresponding latent code **z** in 2D space for each **x**. Run the following in cmd lime:
