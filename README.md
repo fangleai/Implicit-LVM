@@ -11,7 +11,8 @@ This repository contains source code to reproduce the results presented in the p
 }
 ```
 
-Each folder corresponds to a specific experiment with different datasets or tasks. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
+We present two types of implicit deep latent variable models, iVAE and iVAE_{MI}.
+Core to these two model variants is the sample-based representation of the latent features in LVMs, in replacement of traditional Gaussian-based distributions. Each folder corresponds to a specific experiment with different datasets or tasks. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
 
 ## Contents
 There are three steps to use this codebase to reproduce the results in the paper.
@@ -41,7 +42,7 @@ python train_onehot.py
 ```
 The result is as following:
 
-VAE             |  I-VAE
+VAE             |  iVAE
 :--------------:|:-------------------------:
 ![](toy_onehot/results_vae/070000.png)  |  ![](toy_onehot/results/075000.png)
 
