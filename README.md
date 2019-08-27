@@ -48,7 +48,7 @@ VAE             |  iVAE
 :--------------:|:-------------------------:
 <img src="toy_onehot/results_vae/070000.png" width="200"> | <img src="toy_onehot/results/075000.png" width="200"> 
 
-# 2. Language modeling
+## 2. Language modeling
 
 ### 2.1 Language modeling on PTB
 
@@ -114,7 +114,7 @@ The command for training VAEs ('vae', 'beta_vae', 'cyc_vae') is for example
 ```
 python train_yelp_vaes.py --model vae
 ```
-# 3. Style transfer on Yelp
+## 3. Style transfer on Yelp
 Need [fasttext library](https://pypi.org/project/fasttext/) and [KenLM Language Model Toolkit](https://github.com/kpu/kenlm) for evaluation. Please install beforehand.
 The command for training implicit vae with mutual information maximized is 
 ```
@@ -128,7 +128,7 @@ For evaluating the model after training for the 25th epoch, run
 ```
 python train_yelp.py --eval --load_path ./output/ILVM --load_epoch 25
 ```
-# 4. Dialog response generation 
+## 4. Dialog response generation 
 
 ### 4.1. Dialog response generation on Switchboard
 Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
