@@ -35,7 +35,7 @@ There are three steps to use this codebase to reproduce the results in the paper
     
     4.2. [Dialog response generation on DailyDialog](#Dialog-response-generation-on-Dailydial)
 
-# 1. Proof-of-Concept on a Toy Dataset 
+## 1. Proof-of-Concept on a Toy Dataset 
 The toy dataset contains 4 data points **x**: 4 different one-hot four-dimensional vectors, and we learn the corresponding latent code **z** in 2D space for each **x**. Run the following in cmd lime:
 ```
 cd toy_onehot/
