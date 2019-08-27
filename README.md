@@ -1,4 +1,4 @@
-# Implicit-LVM
+# Implicit Deep Latent Variable Models for Text Generation
 
 This repository contains source code to reproduce the results presented in the paper [Implicit Deep Latent Variable Models for Text Generation](https://arxiv.org/abs/1901.00612) (EMNLP 2019):
 
