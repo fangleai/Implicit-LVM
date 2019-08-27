@@ -29,7 +29,8 @@ VAE             |  I-VAE
 
 # 2. Language modeling
 
-## 2.1 Language modeling on PTB
+### 2.1 Language modeling on PTB
+
 After downloading, run
 ```
 cd lang_model_ptb/
@@ -57,7 +58,8 @@ For evaluating decoders from prior codes after training and calculate forward & 
 ```
 python generative_model.py --model ['mle', 'mle_mi', 'vae','beta_vae', 'savae', 'cyc_vae']
 ```
-## 2.2. Language modeling on Yahoo
+### 2.2. Language modeling on Yahoo
+
 After downloading, run
 ```
 cd lang_model_yahoo/
@@ -73,7 +75,8 @@ The command for evaluation after the 30th epoch is
 ```
 python train_yahoo.py --test --train_from results_mle/030.pt
 ```
-## 2.3. Language modeling on Yelp
+### 2.3. Language modeling on Yelp
+
 Specify '--model' in cmd line, with '--model mle' for implicit vae (default if not specified) and '--model mle_mi' for implicit vae with mutual information maximized. The command for training is for example
 ```
 python train_yelp.py
@@ -105,7 +108,8 @@ For evaluating the model after training for the 25th epoch, run
 python train_yelp.py --eval --load_path ./output/ILVM --load_epoch 25
 ```
 # 4. Dialog response generation 
-## 4.1. Dialog response generation on Switchboard
+
+### 4.1. Dialog response generation on Switchboard
 Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
 
 The command for training implicit vae with mutual information maximized is 
@@ -116,7 +120,8 @@ The command for training [DialogWAE](https://arxiv.org/abs/1805.12352) is
 ```
 python DialogWAE_train_swda.py
 ```
-## 4.2. Dialog response generation on Dailydial
+### 4.2. Dialog response generation on Dailydial
+
 Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
 
 The command for training implicit vae with mutual information maximized is 
