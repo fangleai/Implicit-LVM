@@ -14,8 +14,8 @@ This repository contains source code to reproduce the results presented in the p
 
 Each folder corresponds to a specific experiment with different datasets or tasks. To run the code, download the zip file, extract it and cd to `Implicit-LVM/` and further cd to its subfolder for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAE. 
 
-# 1. Toy_onehot
-The toy dataset contains 4 data points **x**: 4 different one-hot four-dimensional vectors, and we learn corresponding latent code **z** in 2D space for each **x**. Run the following in cmd lime:
+# 1. Proof-of-Concept on a Toy Dataset 
+The toy dataset contains 4 data points **x**: 4 different one-hot four-dimensional vectors, and we learn the corresponding latent code **z** in 2D space for each **x**. Run the following in cmd lime:
 ```
 cd toy_onehot/
 python vae_onehot.py
@@ -27,7 +27,9 @@ VAE             |  I-VAE
 :--------------:|:-------------------------:
 ![](toy_onehot/results_vae/070000.png)  |  ![](toy_onehot/results/075000.png)
 
-# 2. Language modeling on PTB
+# 2. Language modeling
+
+## 2.1 Language modeling on PTB
 After downloading, run
 ```
 cd lang_model_ptb/
@@ -55,7 +57,7 @@ For evaluating decoders from prior codes after training and calculate forward & 
 ```
 python generative_model.py --model ['mle', 'mle_mi', 'vae','beta_vae', 'savae', 'cyc_vae']
 ```
-# 3. Language modeling on Yahoo
+## 2.2. Language modeling on Yahoo
 After downloading, run
 ```
 cd lang_model_yahoo/
@@ -71,7 +73,7 @@ The command for evaluation after the 30th epoch is
 ```
 python train_yahoo.py --test --train_from results_mle/030.pt
 ```
-# 4. Language modeling on Yelp
+## 2.3. Language modeling on Yelp
 Specify '--model' in cmd line, with '--model mle' for implicit vae (default if not specified) and '--model mle_mi' for implicit vae with mutual information maximized. The command for training is for example
 ```
 python train_yelp.py
@@ -88,7 +90,7 @@ The command for training VAEs ('vae', 'beta_vae', 'cyc_vae') is for example
 ```
 python train_yelp_vaes.py --model vae
 ```
-# 5. Style transfer on Yelp
+# 3. Style transfer on Yelp
 Need [fasttext library](https://pypi.org/project/fasttext/) and [KenLM Language Model Toolkit](https://github.com/kpu/kenlm) for evaluation. Please install beforehand.
 The command for training implicit vae with mutual information maximized is 
 ```
@@ -102,7 +104,8 @@ For evaluating the model after training for the 25th epoch, run
 ```
 python train_yelp.py --eval --load_path ./output/ILVM --load_epoch 25
 ```
-# 5. Dialog response generation on Switchboard
+# 4. Dialog response generation 
+## 4.1. Dialog response generation on Switchboard
 Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
 
 The command for training implicit vae with mutual information maximized is 
@@ -113,7 +116,7 @@ The command for training [DialogWAE](https://arxiv.org/abs/1805.12352) is
 ```
 python DialogWAE_train_swda.py
 ```
-# 6. Dialog response generation on Dailydial
+## 4.2. Dialog response generation on Dailydial
 Use pre-trained Word2vec: download Glove word embeddings `glove.twitter.27B.200d.txt` from https://nlp.stanford.edu/projects/glove/ and save it to the `./data` folder. The default setting use 200 dimension word embedding trained on Twitter.
 
 The command for training implicit vae with mutual information maximized is 
@@ -124,5 +127,8 @@ The command for training [DialogWAE](https://arxiv.org/abs/1805.12352) is
 ```
 python DialogWAE_train_dailydial.py
 ```
-# Reference
-  NA so far.
+
+## Questions?
+Please drop us ([Le](https://www.fangleai.com/) or [Chunyuan](http://chunyuan.li/) ) a line if you have any questions.
+
+
