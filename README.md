@@ -25,7 +25,7 @@ There are three steps to use this codebase to reproduce the results in the paper
     
     2.3. [Language modeling on Yelp](#Language-modeling-on-Yelp) 
 
-3. [Style-transfer-on-Yelp](#Style transfer on Yelp) 
+3. [Style-transfer-on-Yelp](#Style-transfer-on-Yelp) 
 4. [Dialog response generation](#Dialog-response-generation ) 
 
     4.1. [Dialog response generation on Switchboard](#Dialog-response-generation-on-Switchboard)
