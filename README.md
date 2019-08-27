@@ -11,7 +11,7 @@ This repository contains source code to reproduce the results presented in the p
 }
 ```
 
-<img src="misc/EMNLP2019_iVAE.png" width="400">
+<img src="misc/EMNLP2019_iVAE.png" width="700">
 
 We present two types of implicit deep latent variable models, **iVAE** and **iVAE_MI**.
 Core to these two model variants is the sample-based representation of the latent features in LVMs, in replacement of traditional Gaussian-based distributions. In this repo, each folder corresponds to a specific experiment with different datasets or tasks. To run the code, please go to subfolders for specific experiment. The file named as `train_xxx.py` in each folder is the main code to train and test our implicit VAEs. 
@@ -46,7 +46,7 @@ The result is as following:
 
 VAE             |  iVAE
 :--------------:|:-------------------------:
-![](toy_onehot/results_vae/070000.png)  |  ![](toy_onehot/results/075000.png)
+<img src="toy_onehot/results_vae/070000.png" width="200"> | <img src="toy_onehot/results/075000.png" width="200"> 
 
 # 2. Language modeling
 
