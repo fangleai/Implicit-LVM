@@ -89,7 +89,8 @@ def evaluation(x, eps, epo=None):
     pi = decoder(z_x)
     rec = -torch.mean(torch.log(pi[x == 1])) - torch.sum(torch.log(1 - pi[x == 0])) / x.shape[0]
     logging.info('rec: %.4f' % rec)
-    z = eps.clone()
+#     z = eps.clone()
+    z = torch.randn_like(eps)
     kl = torch.mean(nu(x, z_x)) - torch.mean(torch.exp(nu(x, z))) + 1.0
     logging.info('kl with nu: %.4f' % kl)
     logging.info('neg_ELBO with nu: %.4f' % (rec + kl))
