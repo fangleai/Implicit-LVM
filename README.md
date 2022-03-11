@@ -1,7 +1,7 @@
 # Implicit Deep Latent Variable Models for Text Generation
 
 -------------------------------------------------------------------------------------------------------------
-It's reported by researchers that there may be some default API changes happened behind, which may cause the training loss diverge (e.g. ELBO not converging as expected). Please be careful here. If you have found the change/bug, please contact Le Fang (lefang@buffalo.edu) and we really appreciate your great catch.
+[03/11/2022] It's reported by researchers that there may be some default API changes happened behind, which may cause the training loss diverge (e.g. ELBO not converging as expected). Please be careful here. If you have found the change/bug, please contact Le Fang (lefang@buffalo.edu) and we really appreciate your great catch.
 Refer to this [blog](https://docs.google.com/document/d/11IMGGCtiy5zPDqzdq4cXzOHzSdS4INzpwdMt-4ZU8eQ/edit#bookmark=id.bzv0jfk7w1uv) for the loss behavior seen originally.
 -------------------------------------------------------------------------------------------------------------
 
