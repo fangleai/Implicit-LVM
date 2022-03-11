@@ -1,8 +1,15 @@
 # Implicit Deep Latent Variable Models for Text Generation
 
 -------------------------------------------------------------------------------------------------------------
-[03/11/2022] It's reported once by a researcher that there may be some default API changes happened behind, which may cause the training loss diverge (e.g. ELBO not converging as expected). Please be careful here. If you have found the change/bug, please contact Le Fang (lefang@buffalo.edu) and we really appreciate your great catch.
-Refer to this [blog](https://docs.google.com/document/d/11IMGGCtiy5zPDqzdq4cXzOHzSdS4INzpwdMt-4ZU8eQ/edit#bookmark=id.bzv0jfk7w1uv) for the loss behavior seen originally.
+[03/10/2022] It's reported by a researcher that there may be some default API changes happened behind, which may cause the training loss diverge (e.g. ELBO not converging as expected). Please refer to this [blog](https://docs.google.com/document/d/11IMGGCtiy5zPDqzdq4cXzOHzSdS4INzpwdMt-4ZU8eQ/edit#bookmark=id.bzv0jfk7w1uv) for the loss behavior seen originally.
+
+[03/11/2022] Thanks to Kushal Jain! The code runs well with torch 0.4.1. FYI: the following virtual environment using conda is tested to run the code.
+```
+conda create -n myenv python=3.6
+conda install pytorch=0.4.1 cuda92 -c pytorch
+conda install tqdm
+conda install h5py
+``` 
 -------------------------------------------------------------------------------------------------------------
 
 
